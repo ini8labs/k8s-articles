@@ -1,0 +1,16 @@
+---
+- name: Install k3s on master nodes
+  hosts: master
+  remote_user: root
+  roles:
+    - role: k3s/master/install
+
+
+- name: Join worker nodes
+  hosts: worker
+  remote_user: root
+  environment:
+    K3S_URL: "{{ k3s_master_url }}"
+#    K8S_TOKEN: "{{ hostvars[groups['master'][0]]['node_token'] }}"
+  roles:
+    - role: k3s/worker/install

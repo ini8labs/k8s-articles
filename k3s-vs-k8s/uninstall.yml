@@ -1,0 +1,13 @@
+---
+
+- name: Uninstall k3s from Master nodes
+  hosts: master
+  remote_user: root
+  roles:
+    - role: k3s/master/uninstall
+
+- name: Uninstall k3s from Worker nodes
+  hosts: worker
+  remote_user: root
+  roles:
+    - role: k3s/worker/uninstall

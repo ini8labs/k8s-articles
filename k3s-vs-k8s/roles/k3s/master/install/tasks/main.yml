@@ -1,0 +1,17 @@
+---
+
+- name: Download Install file from k3s.io
+  get_url:
+    url: https://get.k3s.io
+    dest: /usr/local/bin/k3s_install_script.sh
+    mode: 0755
+
+- name: Install k3s
+  command: /usr/local/bin/k3s_install_script.sh
+
+- name: Get Node token
+  command: cat /var/lib/rancher/k3s/server/node-token
+  register: token
+
+- set_fact:
+    node_token: "{{ token.stdout }}"

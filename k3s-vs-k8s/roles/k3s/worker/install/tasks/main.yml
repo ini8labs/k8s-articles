@@ -1,0 +1,14 @@
+---
+- name: Download the install script from k3s.io
+  get_url:
+    url: https://get.k3s.io
+    dest: /usr/local/bin/k3s_install_script.sh
+    mode: 0755
+
+- set_fact:
+    node_token: "{{ hostvars[groups['master'][0]]['node_token'] }}"
+
+- name: Join the worker nodes
+  command: /usr/local/bin/k3s_install_script.sh
+  environment:
+    K3S_TOKEN: "{{ node_token  }}"
