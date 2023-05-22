@@ -6,12 +6,29 @@
     dest: /usr/local/bin/k3s_install_script.sh
     mode: 0755
 
-- name: Install k3s
-  command: /usr/local/bin/k3s_install_script.sh
+- name: Install k3s with Single Master
+  block:
+    - name: Install k3s
+      command: /usr/local/bin/k3s_install_script.sh
 
-- name: Get Node token
-  command: cat /var/lib/rancher/k3s/server/node-token
-  register: token
+    - name: Get Node token
+      command: cat /var/lib/rancher/k3s/server/node-token
+      register: token
 
-- set_fact:
-    node_token: "{{ token.stdout }}"
+    - set_fact:
+        node_token: "{{ token.stdout }}"
+
+  when: k3s_ha_mode != "true"
+
+
+- name: Install k3s in HA Mode/ Multi-master
+  block:
+    - name: Install k3s on parent master node
+      command: /usr/local/bin/k3s_install_script.sh --cluster-init
+      when: ansible_host == k3s_ha_parent_master
+
+    - name: Install k3s on master nodes
+      command: /usr/local/bin/k3s_install_script.sh --server  https://"{{ k3s_ha_parent_master }}":6443
+      when: ansible_host != k3s_ha_parent_master
+
+  when: k3s_ha_mode == "true"

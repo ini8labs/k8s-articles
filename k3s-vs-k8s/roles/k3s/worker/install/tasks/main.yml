@@ -7,6 +7,11 @@
 
 - set_fact:
     node_token: "{{ hostvars[groups['master'][0]]['node_token'] }}"
+  when: k3s_ha_mode == "false"
+
+- set_fact:
+    node_token: "{{ k3s_ha_token }}"
+  when: k3s_ha_mode == "true"
 
 - name: Join the worker nodes
   command: /usr/local/bin/k3s_install_script.sh

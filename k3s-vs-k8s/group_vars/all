@@ -1,3 +1,15 @@
 ---
+# k3s version to be used for the cluster creation
 k3s_version: v1.26.3+k3s1
+
+# URL to interact with k3s API
 k3s_master_url: "https://128.140.92.105:6443"
+
+# by default ha_mode would be false
+k3s_ha_mode: "true"
+
+# Secrets to be used when building cluster in HA mode
+k3s_ha_token: "some_secret"
+
+# IP address of the first master node
+k3s_ha_parent_master: 128.140.92.105
